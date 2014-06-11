@@ -268,11 +268,29 @@ class SoapController < ApplicationController
             :to => :exchange_frequencies
     
     def exchange_frequencies
-        rf_array_in = params[:IncomingFreqs][:elements] || []
-        rf_array_out = []
+        rig_array_in = params[:IncomingFreqs][:elements] || []
+        rig_array_out = []
         
+        rig_array_in.each do |rig_info|
+            rig = Rig.where(letter: rig_info[:networkLetter]).where(rig_number: rig_info[:rigNumber]).first_or_create do |rig|
+#                 rig.letter = rig_info[:networkLetter]
+#                 rig.rig_number = rig_info[:rigNumber]
+                rig.station = rig_info[:station]
+                rig.label = rig_info[:label]
+                rig.mode = rig_info[:mode]
+                rig.transmit_frequency = rig_info[:xmitFreq]
+                rig.receive_frequency = rig_info[:recvFreq]
+            end
+            
+            rig.save
+        end
         
+        Rig.where('updated_at < ?', 10.minutes.ago).delete_all
         
-        render :soap => { 'tns:ExchangeFrequenciesResult' => { :rf_el => rf_array_out } }
+        Rig.all.each do |rig|
+            rig_array_out << rig.to_soap_rig
+        end
+        
+        render :soap => { 'tns:ExchangeFrequenciesResult' => { :rf_el => rig_array_out } }
     end
 end
