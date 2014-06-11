@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  time64h: 1
+  time64l: 1
+  band: 
+  station: MyString
+  mode: 1
+  dupe: 1
+  serial: 1
+  version: 1
+  idkey: 1
+  updatedby: MyString
+
+two:
+  time64h: 1
+  time64l: 1
+  band: 
+  station: MyString
+  mode: 1
+  dupe: 1
+  serial: 1
+  version: 1
+  idkey: 1
+  updatedby: MyString

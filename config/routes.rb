@@ -1,5 +1,10 @@
 WritelogRails::Application.routes.draw do
+  resources :qsos
+
+
     wash_out :soap
+    
+    get 'wsdl', to: 'wsdl#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

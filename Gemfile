@@ -37,4 +37,5 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'debugger'
 
-gem 'wash_out', :git => 'https://github.com/inossidabile/wash_out.git'
+gem 'wash_out'
+# gem 'wash_out', :git => 'https://github.com/inossidabile/wash_out.git'

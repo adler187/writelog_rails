@@ -1,0 +1,79 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Time:</b>
+  <%= @qso.time %>
+</p>
+
+<p>
+  <b>Transmit Frequency:</b>
+  <%= @qso.transmit_frequency %>
+</p>
+
+<p>
+  <b>Receive Frequency:</b>
+  <%= @qso.receive_frequency %>
+</p>
+
+<p>
+  <b>Band:</b>
+  <%= @qso.band %>
+</p>
+
+<p>
+  <b>Station:</b>
+  <%= @qso.station %>
+</p>
+
+<p>
+  <b>Mode:</b>
+  <%= @qso.mode %>
+</p>
+
+<p>
+  <b>Dupe:</b>
+  <%= @qso.dupe %>
+</p>
+
+<p>
+  <b>Serial:</b>
+  <%= @qso.serial %>
+</p>
+
+<p>
+  <b>Version:</b>
+  <%= @qso.version %>
+</p>
+
+<p>
+  <b>Id Key:</b>
+  <%= @qso.id_key %>
+</p>
+
+<p>
+  <b>Updated By:</b>
+  <%= @qso.updated_by %>
+</p>
+
+<p>
+  <b>Operating Class:</b>
+  <%= @qso.operating_class %>
+</p>
+
+<p>
+  <b>Section:</b>
+  <%= @qso.section %>
+</p>
+
+<p>
+  <b>C Field:</b>
+  <%= @qso.c_field %>
+</p>
+
+<p>
+  <b>Country Prefix:</b>
+  <%= @qso.country_prefix %>
+</p>
+
+<%= link_to 'Edit', edit_qso_path(@qso) %> |
+<%= link_to 'Back', qsos_path %>

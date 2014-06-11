@@ -1,0 +1,51 @@
+<h1>Listing qsos</h1>
+
+<table>
+  <tr>
+    <th>Time</th>
+    <th>Transmit Frequency</th>
+    <th>Receive Frequency</th>
+    <th>Band</th>
+    <th>Station</th>
+    <th>Mode</th>
+    <th>Dupe</th>
+    <th>Serial</th>
+    <th>Version</th>
+    <th>ID Key</th>
+    <th>Updated By</th>
+    <th>Operating Class</th>
+    <th>Section</th>
+    <th>C Field</th>
+    <th>Country Prefix</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @qsos.each do |qso| %>
+  <tr>
+    <td><%= qso.time %></td>
+    <td><%= qso.transmit_frequency %></td>
+    <td><%= qso.receive_frequency %></td>
+    <td><%= qso.band %></td>
+    <td><%= qso.station %></td>
+    <td><%= qso.mode %></td>
+    <td><%= qso.dupe %></td>
+    <td><%= qso.serial %></td>
+    <td><%= qso.version %></td>
+    <td><%= qso.id_key %></td>
+    <td><%= qso.updated_by %></td>
+    <td><%= qso.operating_class %></td>
+    <td><%= qso.section %></td>
+    <td><%= qso.c_field %></td>
+    <td><%= qso.country_prefix %></td>
+    <td><%= link_to 'Show', qso %></td>
+    <td><%= link_to 'Edit', edit_qso_path(qso) %></td>
+    <td><%= link_to 'Destroy', qso, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Qso', new_qso_path %>

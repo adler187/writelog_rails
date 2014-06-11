@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+ xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:tns2="http://schemas.datacontract.org/2004/07/ContestQsos"
+ xmlns:tns="urn:ContestQsos2">
+<soap:Body>
+    <tns:AddAndGetLogSummaryResponse>
+        <tns:AddAndGetLogSummaryResult xsi:type="tns2:LogSummary">
+            <logState xsi:type="xsd:int">0</logState>
+            <logSummaryIds xsi:type="tns2:ArrayOfQsoIdVersion"></logSummaryIds>
+        </tns:AddAndGetLogSummaryResult>
+    </tns:AddAndGetLogSummaryResponse>
+</soap:Body></soap:Envelope>
+
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+ xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:tns2="http://schemas.datacontract.org/2004/07/ContestQsos"
+ xmlns:tns="urn:ContestQsos2">
+  <soap:Body>
+    <tns:AddAndGetLogSummaryResponse>
+      <tns:AddAndGetLogSummaryResult xsi:type="tns:LogSummary">
+        <logState xsi:type="xsd:int">0</logState>
+        <logSummaryIds xsi:type="tns:ArrayOfQsoIdVersion"></logSummaryIds>
+      </tns:AddAndGetLogSummaryResult>
+    </tns:AddAndGetLogSummaryResponse>
+  </soap:Body>
+</soap:Envelope>
+
+-->
