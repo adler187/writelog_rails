@@ -236,7 +236,7 @@ class SoapController < ApplicationController
         # or another client inserted a record since our query
         new_log_state = Qso.last.id if last_log_added_id == (new_log_state + new_qsos.length)
         
-        render :soap => { 'tns:AddAndGetQsoResult' => { :qsoArray => { :elements => qso_array }, :logState => log_state } }
+        render :soap => { 'tns:AddAndGetQsoResult' => { :qsoArray => { :elements => qso_array }, :logState => new_log_state } }
     end
     
     soap_action 'getQsosByKeyArray',
