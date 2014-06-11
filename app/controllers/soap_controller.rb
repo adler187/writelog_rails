@@ -55,10 +55,10 @@ class ArrayOfQsoIdVersion < WashOut::Type
 end
 
 class ArrayOfint < WashOut::Type
-    map :int => [:integer]
+    map 'contest26:int' => [:integer]
     
     type_name 'ArrayOfint'
-    attr_accessor :int
+    namespace 'contest26'
 end
 
 class ArrayOfstring < WashOut::Type
@@ -102,7 +102,10 @@ end
 class SoapController < ApplicationController
     soap_service namespace: 'urn:ContestQsos2',
                  soap_action_routing: false,
-                 additional_namespaces: {"contest25" => 'http://schemas.datacontract.org/2004/07/ContestQsos' }
+                 additional_namespaces: {
+                     'contest25' => 'http://schemas.datacontract.org/2004/07/ContestQsos',
+                     'contest26' => 'http://schemas.microsoft.com/2003/10/Serialization/Arrays'
+                 }
     
     soap_action 'GetSessionId',
             :args => nil,
@@ -146,7 +149,7 @@ class SoapController < ApplicationController
             end
         end
         
-        render :soap => { 'tns:ColumnNamesToIndicesResult' => { :int => column_indices } }
+        render :soap => { 'tns:ColumnNamesToIndicesResult' => { 'contest26:int' => column_indices } }
     end
     
     soap_action 'AddAndGetLogSummary',
