@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Station:</b>
+  <%= @rig.station %>
+</p>
+
+<p>
+  <b>Letter:</b>
+  <%= @rig.letter %>
+</p>
+
+<p>
+  <b>Rig number:</b>
+  <%= @rig.rig_number %>
+</p>
+
+<p>
+  <b>Label:</b>
+  <%= @rig.label %>
+</p>
+
+<p>
+  <b>Transmit frequency:</b>
+  <%= @rig.transmit_frequency %>
+</p>
+
+<p>
+  <b>Receive frequency:</b>
+  <%= @rig.receive_frequency %>
+</p>
+
+<p>
+  <b>Mode:</b>
+  <%= @rig.mode %>
+</p>
+
+
+<%= link_to 'Edit', edit_rig_path(@rig) %> |
+<%= link_to 'Back', rigs_path %>

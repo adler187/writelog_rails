@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140531013646) do
+ActiveRecord::Schema.define(:version => 20140611025637) do
 
   create_table "qsos", :force => true do |t|
     t.integer  "time_upper"
@@ -30,6 +30,18 @@ ActiveRecord::Schema.define(:version => 20140531013646) do
     t.string   "section"
     t.string   "c_field"
     t.string   "country_prefix"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
+  end
+
+  create_table "rigs", :force => true do |t|
+    t.string   "station"
+    t.integer  "letter"
+    t.integer  "rig_number"
+    t.string   "label"
+    t.integer  "mode"
+    t.decimal  "transmit_frequency", :precision => 10, :scale => 0
+    t.decimal  "receive_frequency",  :precision => 10, :scale => 0
     t.datetime "created_at",                                        :null => false
     t.datetime "updated_at",                                        :null => false
   end

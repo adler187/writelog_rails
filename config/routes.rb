@@ -1,4 +1,7 @@
 WritelogRails::Application.routes.draw do
+  resources :rigs
+
+
   resources :qsos
 
 

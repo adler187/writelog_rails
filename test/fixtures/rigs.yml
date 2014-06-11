@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  station: MyString
+  letter: 1
+  rig_number: 
+  label: MyString
+  transmit_frequency: 9.99
+  receive_frequency: 9.99
+
+two:
+  station: MyString
+  letter: 1
+  rig_number: 
+  label: MyString
+  transmit_frequency: 9.99
+  receive_frequency: 9.99
