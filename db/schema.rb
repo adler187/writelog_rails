@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(:version => 20140611025637) do
   create_table "qsos", :force => true do |t|
     t.integer  "time_upper"
     t.integer  "time_lower"
-    t.decimal  "transmit_frequency", :precision => 10, :scale => 0
-    t.decimal  "receive_frequency",  :precision => 10, :scale => 0
+    t.integer  "transmit_frequency", :limit => 10
+    t.integer  "receive_frequency",  :limit => 10
     t.integer  "band"
     t.string   "station"
     t.integer  "mode"
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(:version => 20140611025637) do
     t.string   "section"
     t.string   "c_field"
     t.string   "country_prefix"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   create_table "rigs", :force => true do |t|
@@ -40,10 +40,10 @@ ActiveRecord::Schema.define(:version => 20140611025637) do
     t.integer  "rig_number"
     t.string   "label"
     t.integer  "mode"
-    t.decimal  "transmit_frequency", :precision => 10, :scale => 0
-    t.decimal  "receive_frequency",  :precision => 10, :scale => 0
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
+    t.decimal  "transmit_frequency", :precision => 22, :scale => 12
+    t.decimal  "receive_frequency",  :precision => 22, :scale => 12
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
   end
 
 end
