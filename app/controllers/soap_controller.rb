@@ -22,7 +22,7 @@ class QsoIdVersion < WashOut::Type
     namespace 'contest25'
 end
 
-class SoapQso < WashOut::Type
+class SoapQsoSend < WashOut::Type
     map 'contest25:time64H' => :integer,
         'contest25:time64L' => :integer,
         'contest25:xmitFreq' => :double,
@@ -36,6 +36,26 @@ class SoapQso < WashOut::Type
         'contest25:version' => :integer,
         'contest25:idKey' => :string,
         'contest25:updatedBy' => :string
+    
+    type_name 'Qso'
+    
+    namespace 'contest25'
+end
+
+class SoapQso < WashOut::Type
+    map :time64H => :integer,
+        :time64L => :integer,
+        :xmitFreq => :double,
+        :recvFreq => :double,
+        :band => :integer,
+        :station => :string,
+        :mode => :integer,
+        :dupe => :integer,
+        :serial => :integer,
+        :qsoparts => ArrayOfstring,
+        :version => :integer,
+        :idKey => :string,
+        :updatedBy => :string
     
     type_name 'Qso'
     
@@ -68,14 +88,28 @@ class RigFrequencyOut < WashOut::Type
     namespace 'contest25'
 end
 
-class ArrayOfQso < WashOut::Type
-    map 'contest25:Qso' => [SoapQso]
+class ArrayOfQsoSend < WashOut::Type
+    map 'contest25:Qso' => [SoapQsoSend]
     
     type_name 'ArrayOfQso'
 end
 
-class ArrayOfQsoIdVersion < WashOut::Type
+class ArrayOfQso < WashOut::Type
+    map :Qso => [SoapQso]
+    
+    type_name 'ArrayOfQso'
+end
+
+class ArrayOfQsoIdVersionSend < WashOut::Type
     map 'contest25:QsoIdVersion' => [QsoIdVersion]
+    
+    type_name 'ArrayOfQsoIdVersion'
+    
+    namespace 'contest25'
+end
+
+class ArrayOfQsoIdVersion < WashOut::Type
+    map :QsoIdVersion => [QsoIdVersion]
     
     type_name 'ArrayOfQsoIdVersion'
     
@@ -95,7 +129,7 @@ class ArrayOfRigFrequencySend < WashOut::Type
 end
 
 class QsoUpdate < WashOut::Type
-    map 'contest25:qsoArray' => ArrayOfQso,
+    map 'contest25:qsoArray' => ArrayOfQsoSend,
         'contest25:logState' => :integer
     
     type_name 'QsoUpdate'
@@ -105,7 +139,7 @@ end
 
 class LogSummary < WashOut::Type
     map 'contest25:logState' => :integer,
-        'contest25:logSummaryIds' => ArrayOfQsoIdVersion
+        'contest25:logSummaryIds' => ArrayOfQsoIdVersionSend
     
     type_name 'LogSummary'
     
@@ -172,19 +206,19 @@ class SoapController < ApplicationController
     end
     
     def add_qsos(new_qsos)
+        new_qso = Qso.last
         
         new_qsos.each do |qso|
-            puts qso
             new_qso = Qso.new
             
             new_qso.time_upper = qso[:time64H]
             new_qso.time_lower = qso[:time64L]
             new_qso.transmit_frequency = qso[:xmitFreq]
             new_qso.receive_frequency = qso[:recvFreq]
-            new_qso.band = qso[:band]
+            new_qso.band_key = qso[:band]
             new_qso.station = qso[:station]
-            new_qso.mode = qso[:mode]
-            new_qso.dupe = qso[:dupe]
+            new_qso.mode_key = qso[:mode]
+            new_qso.dupe_key = qso[:dupe]
             new_qso.serial = qso[:serial]
             new_qso.version = qso[:version]
             new_qso.id_key = qso[:idKey]
@@ -198,6 +232,8 @@ class SoapController < ApplicationController
             
             new_qso.save
         end
+        
+        new_qso.id
     end
     
     soap_action 'AddAndGetLogSummary',
@@ -222,16 +258,18 @@ class SoapController < ApplicationController
         qsos_in_update.each do |qso|
             new_log_state = qso.id
             
-            summary_ids << qso.to_soap_qso_id :contest25
+            summary_ids << qso.to_soap_qso_id(:contest25)
         end
         
-        last_log_added_id = add_qsos(new_qsos)
+        if !new_qsos.empty?
+            last_log_added_id = add_qsos(new_qsos)
         
-        # We're up to date if we've given the client back all the
-        # qsos in the database, since their last update. This would
-        # not be the case if there are more qsos than their max_requested
-        # or another client inserted a record since our query
-        new_log_state = Qso.last.id if last_log_added_id == (new_log_state + new_qsos.length)
+            # We're up to date if we've given the client back all the
+            # qsos in the database, since their last update. This would
+            # not be the case if there are more qsos than their max_requested
+            # or another client inserted a record since our query
+            new_log_state = last_log_added_id if last_log_added_id == (new_log_state + new_qsos.length)
+        end
         
         render :soap => { 'tns:AddAndGetLogSummaryResult' => { 'contest25:logState' => new_log_state, 'contest25:logSummaryIds' => { 'contest25:QsoIdVersion' => summary_ids } } }
     end
@@ -254,37 +292,44 @@ class SoapController < ApplicationController
         Qso.where('id > ?', old_log_state).limit(max_requested).each do |qso|
             new_log_state = qso.id
             
-            qso_array << qso.to_soap_qso :contest25
+            qso_array << qso.to_soap_qso(:contest25)
         end
         
-        last_log_added_id = add_qsos(new_qsos)
+        if !new_qsos.empty?
+            last_log_added_id = add_qsos(new_qsos)
         
-        # We're up to date if we've given the client back all the
-        # qsos in the database, since their last update. This would
-        # not be the case if there are more qsos than their max_requested
-        # or another client inserted a record since our query
-        new_log_state = Qso.last.id if last_log_added_id == (new_log_state + new_qsos.length)
+            # We're up to date if we've given the client back all the
+            # qsos in the database, since their last update. This would
+            # not be the case if there are more qsos than their max_requested
+            # or another client inserted a record since our query
+            new_log_state = last_log_added_id if last_log_added_id == (new_log_state + new_qsos.length)
+        end
         
         render :soap => { 'tns:AddAndGetQsoResult' => { 'contest25:qsoArray' => { 'contest25:Qso' => qso_array }, 'contest25:logState' => new_log_state } }
     end
     
     soap_action 'getQsosByKeyArray',
-            :args => { :SessionId => :string, :QsoKeyarray => ArrayOfstring },
+            :args => { :SessionId => :string, :QsoKeyArray => ArrayOfstring },
             :return => { 'tns:getQsosByKeyArrayResult' => QsoUpdate },
             :response_tag => 'getQsosByKeyArrayResponse',
             :to => :get_qso_by_key_array
     
     def get_qso_by_key_array
-        qso_keys = params[:QsoKeyarray] || []
+        qso_keys = params[:QsoKeyArray] # || []
         qso_array = []
         
+        
+        puts params
         begin
             qso_keys.each do |key|
-                qso = Qso.find_by! id_key: key
-                qso_array << qso.to_soap_qso :contest25
+                puts key
+                qso = Qso.where(id_key: key).first
+                qso_array << qso.to_soap_qso(:contest25)
             end
             
-            render :soap => { 'tns:getQsosByKeyArrayResult' => { 'contest25:qsoArray' => { 'contest25:Qso' => qso_array }, 'contest25:logState' => log_state } }
+            new_log_state = Qso.last.id
+            
+            render :soap => { 'tns:getQsosByKeyArrayResult' => { 'contest25:qsoArray' => { 'contest25:Qso' => qso_array }, 'contest25:logState' => new_log_state } }
         rescue ActiveRecord::RecordNotFound
             # TODO: throw a SOAP exception here
         end
