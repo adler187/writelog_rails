@@ -11,17 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140611025637) do
+ActiveRecord::Schema.define(:version => 20140612061921) do
 
   create_table "qsos", :force => true do |t|
     t.integer  "time_upper"
     t.integer  "time_lower"
     t.integer  "transmit_frequency", :limit => 10
     t.integer  "receive_frequency",  :limit => 10
-    t.integer  "band"
+    t.integer  "band_key"
     t.string   "station"
-    t.integer  "mode"
-    t.integer  "dupe"
+    t.integer  "mode_key"
+    t.integer  "dupe_key"
     t.integer  "serial"
     t.integer  "version"
     t.string   "id_key"
