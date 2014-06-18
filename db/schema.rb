@@ -9,15 +9,15 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140612061921) do
+ActiveRecord::Schema.define(version: 20140618042628) do
 
-  create_table "qsos", :force => true do |t|
+  create_table "qsos", force: true do |t|
     t.integer  "time_upper"
     t.integer  "time_lower"
-    t.integer  "transmit_frequency", :limit => 10
-    t.integer  "receive_frequency",  :limit => 10
+    t.integer  "transmit_frequency", limit: 10
+    t.integer  "receive_frequency",  limit: 10
     t.integer  "band_key"
     t.string   "station"
     t.integer  "mode_key"
@@ -30,20 +30,21 @@ ActiveRecord::Schema.define(:version => 20140612061921) do
     t.string   "section"
     t.string   "c_field"
     t.string   "country_prefix"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.integer  "lock_version",                  default: 0
   end
 
-  create_table "rigs", :force => true do |t|
+  create_table "rigs", force: true do |t|
     t.string   "station"
     t.integer  "letter"
     t.integer  "rig_number"
     t.string   "label"
     t.integer  "mode"
-    t.decimal  "transmit_frequency", :precision => 22, :scale => 12
-    t.decimal  "receive_frequency",  :precision => 22, :scale => 12
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.decimal  "transmit_frequency", precision: 22, scale: 12
+    t.decimal  "receive_frequency",  precision: 22, scale: 12
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
 end
