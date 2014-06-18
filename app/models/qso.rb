@@ -98,7 +98,7 @@ class Qso < ActiveRecord::Base
             "#{namespace.to_s}:version" => version,
             "#{namespace.to_s}:idKey" => id_key,
             "#{namespace.to_s}:updatedBy" => updated_by,
-            "#{namespace.to_s}:qsoparts" => {:string => [
+            "#{namespace.to_s}:qsoparts" => { 'contest26:string' => [
                 operating_class,
                 section,
                 c_field,

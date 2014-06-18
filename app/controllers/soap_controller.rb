@@ -1,4 +1,13 @@
 
+# Client behavior:
+# GetSessionId
+# AddAndGetLogSummary with no Qsos
+# AddAndGetLogSummary with any new Qsos
+# getQsosByKeyArray for any Qsos returned from above
+# addAndGetQsos for any Qsos which have been altered
+# ExchangeFrequencies to keep track of other users
+# Repeat above
+
 class ArrayOfint < WashOut::Type
     map 'contest26:int' => [:integer]
     
@@ -10,6 +19,14 @@ class ArrayOfstring < WashOut::Type
     map :string => [:string]
     
     type_name 'ArrayOfstring'
+end
+
+class ArrayOfstringSend < WashOut::Type
+    map 'contest26:string' => [:string]
+    
+    type_name 'ArrayOfstring'
+    
+    namespace 'contest26'
 end
 
 class QsoIdVersion < WashOut::Type
@@ -32,7 +49,7 @@ class SoapQsoSend < WashOut::Type
         'contest25:mode' => :integer,
         'contest25:dupe' => :integer,
         'contest25:serial' => :integer,
-        'contest25:qsoparts' => ArrayOfstring,
+        'contest25:qsoparts' => ArrayOfstringSend,
         'contest25:version' => :integer,
         'contest25:idKey' => :string,
         'contest25:updatedBy' => :string
@@ -224,10 +241,19 @@ class SoapController < ApplicationController
             new_qso.id_key = qso[:idKey]
             new_qso.updated_by = qso[:updatedBy]
             
-            qso_parts = qso[:qsoparts][:string]
+            soap_qso_parts = qso[:qsoparts][:string]
+            qso_parts = []
+            
+            soap_qso_parts.each do |part|
+                part = nil if part == "{\"@xmlns\"=>\"http://schemas.microsoft.com/2003/10/Serialization/Arrays\"}"
+                
+                qso_parts << part
+            end
+            
+            p qso_parts
             new_qso.operating_class = qso_parts[0]
             new_qso.section = qso_parts[1]
-            new_qso.c_field = ""
+            new_qso.c_field = qso_parts[2]
             new_qso.country_prefix = qso_parts[3]
             
             new_qso.save
@@ -315,14 +341,11 @@ class SoapController < ApplicationController
             :to => :get_qso_by_key_array
     
     def get_qso_by_key_array
-        qso_keys = params[:QsoKeyArray] # || []
+        qso_keys = params[:QsoKeyArray][:string] || []
         qso_array = []
         
-        
-        puts params
         begin
             qso_keys.each do |key|
-                puts key
                 qso = Qso.where(id_key: key).first
                 qso_array << qso.to_soap_qso(:contest25)
             end
