@@ -225,41 +225,87 @@ class SoapController < ApplicationController
     def add_qsos(new_qsos)
         new_qso = Qso.last
         
+        client_sent_outdated_qso = false
+        
         new_qsos.each do |qso|
-            new_qso = Qso.new
             
-            new_qso.time_upper = qso[:time64H]
-            new_qso.time_lower = qso[:time64L]
-            new_qso.transmit_frequency = qso[:xmitFreq]
-            new_qso.receive_frequency = qso[:recvFreq]
-            new_qso.band_key = qso[:band]
-            new_qso.station = qso[:station]
-            new_qso.mode_key = qso[:mode]
-            new_qso.dupe_key = qso[:dupe]
-            new_qso.serial = qso[:serial]
-            new_qso.version = qso[:version]
-            new_qso.id_key = qso[:idKey]
-            new_qso.updated_by = qso[:updatedBy]
-            
-            soap_qso_parts = qso[:qsoparts][:string]
-            qso_parts = []
-            
-            soap_qso_parts.each do |part|
-                part = nil if part == "{\"@xmlns\"=>\"http://schemas.microsoft.com/2003/10/Serialization/Arrays\"}"
+            # The client expects the log state to increase after every insert *and*
+            # update. If they have given us an updated Qso, we would normally just update
+            # it here, but the id wouldn't change, so the log state wouldn't increase.
+            # Instead, we must delete the old Qso and create a new one. This only occurs
+            # if the new version is greater than the old version or they are equal and
+            # the station updating is different. In the second case, two stations have
+            # updated the Qso at the same time, in which case the last one wins.
+            skip_qso = false
+            new_qso = nil
+            while true do
+                old_qso = Qso.where(id_key: qso[:idKey]).first
                 
-                qso_parts << part
+                if old_qso.nil?
+                    new_qso = Qso.create
+                    break
+                else
+                    if old_qso.version > qso[:version] || 
+                      (old_qso.version == qso[:version] && old_qso.updated_by == qso[:updatedBy])
+                        skip_qso = true
+                        client_sent_outdated_qso = true
+                        break
+                    end
+                    
+                    new_qso = old_qso.dup
+                    
+                    begin
+                        old_qso.delete
+                    rescue ActiveRecord::StaleObjectError
+                        # hmm. someone has modified the Qso while we were looking at it,
+                        # let's try this again...
+                        next
+                    end
+                    
+                    if new_qso.version == qso[:version]
+                        qso[:version] += 1
+                        client_sent_outdated_qso = true
+                    end
+                        
+                    break
+                end
             end
             
-            p qso_parts
-            new_qso.operating_class = qso_parts[0]
-            new_qso.section = qso_parts[1]
-            new_qso.c_field = qso_parts[2]
-            new_qso.country_prefix = qso_parts[3]
+            if !skip_qso
+                new_qso.time_upper = qso[:time64H]
+                new_qso.time_lower = qso[:time64L]
+                new_qso.transmit_frequency = qso[:xmitFreq]
+                new_qso.receive_frequency = qso[:recvFreq]
+                new_qso.band_key = qso[:band]
+                new_qso.station = qso[:station]
+                new_qso.mode_key = qso[:mode]
+                new_qso.dupe_key = qso[:dupe]
+                new_qso.serial = qso[:serial]
+                new_qso.version = qso[:version]
+                new_qso.id_key = qso[:idKey]
+                new_qso.updated_by = qso[:updatedBy]
+                
+                soap_qso_parts = qso[:qsoparts][:string]
+                qso_parts = []
+                
+                soap_qso_parts.each do |part|
+                    part = nil if part == "{\"@xmlns\"=>\"http://schemas.microsoft.com/2003/10/Serialization/Arrays\"}"
+                    
+                    qso_parts << part
+                end
+                
+                new_qso.operating_class = qso_parts[0]
+                new_qso.section = qso_parts[1]
+                new_qso.c_field = qso_parts[2]
+                new_qso.country_prefix = qso_parts[3]
+            end
             
             new_qso.save
         end
         
-        new_qso.id
+        return -1 if client_sent_outdated_qso
+        
+        return new_qso.id
     end
     
     soap_action 'AddAndGetLogSummary',
@@ -369,7 +415,7 @@ class SoapController < ApplicationController
         rig_array_out = []
         
         rig_array_in.each do |rig_info|
-            rig = Rig.where(letter: rig_info[:networkLetter]).where(rig_number: rig_info[:rigNumber]).first_or_create
+            rig = Rig.where(letter: rig_info[:networkLetter]).where(rig_number: rig_info[:rigNumber]).first_or_initialize
             
             rig.station = rig_info[:station]
             rig.label = rig_info[:label]
