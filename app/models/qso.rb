@@ -145,8 +145,20 @@ class Qso < ActiveRecord::Base
         }
     end
     
-    def callsign
+    def username
         id_key[13..-1]
+    end
+    
+    def network_letter
+        id_key[0]
+    end
+    
+    def network_display_name
+        rig = Rig.where(username: username).first
+        
+        return rig.network_display_name unless rig.nil?
+        
+        username
     end
 end
 

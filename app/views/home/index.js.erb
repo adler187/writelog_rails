@@ -2,7 +2,7 @@ var qsoinfo;
 var table = $('#logtable > tbody');
 <% @qsos.reverse_each do |qso| %>
 
-qsoinfo = '<tr><td><%= qso.time %></td><td><%= qso.callsign %></td><td><%= qso.band %></td><td><%= qso.mode %></td><td><%= qso.station %></td><td><%= qso.section %></td></tr>';
+qsoinfo = '<tr><td><%= qso.time %></td><td><%= qso.network_display_name %></td><td><%= qso.band %></td><td><%= qso.mode %></td><td><%= qso.station %></td><td><%= qso.section %></td></tr>';
 table.prepend(qsoinfo).slideDown("fast");
 
 <% end %>
