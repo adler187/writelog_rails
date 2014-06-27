@@ -40,10 +40,37 @@ class Qso < ActiveRecord::Base
     
     def band
         case band_key
-        when 1
-            '40m'
-        when 11
+        when 0, 10, 20
+            '160m'
+        when 1, 11, 21
             '80m'
+        when 2, 12, 22
+            '40m'
+        when 3, 13, 23
+            '20m'
+        when 4, 14, 24
+            '15m'
+        when 5, 15, 25
+            '10m'
+        when 6, 16, 26
+            '6m'
+        when 7, 17, 27
+            '30m'
+        when 8, 18, 28
+            '17m'
+        when 9, 19, 29
+            '12m'
+        when 30, 31
+            '2m'
+        when 32, 33
+            '1.25m'
+        when 34, 35
+            '70cm'
+        when 36, 37
+            '33cm'
+            
+        when 38
+            '????'
         else
             "Unkown band #{band_key}"
         end
@@ -57,10 +84,13 @@ class Qso < ActiveRecord::Base
         when 32
             ''
         when 68
-            'D'
+            'Dupe'
             
         when 66
-            'B'
+            'Out of Band'
+            
+        when 88
+            'Unclaimed'
         else
             "Unknown Dupe value #{dupe_key}"
         end
@@ -81,7 +111,7 @@ class Qso < ActiveRecord::Base
         
         unix_time = (windows_time / 10000000) - 11644473600
         
-        DateTime.strptime(unix_time.to_s, '%s')
+        DateTime.strptime(unix_time.to_s, '%s').strftime('%Y-%m-%d %H:%M:%S')
     end
     
     def to_soap_qso(namespace)
@@ -113,6 +143,10 @@ class Qso < ActiveRecord::Base
             "#{namespace.to_s}:version" => version,
             "#{namespace.to_s}:updatedBy" => updated_by
         }
+    end
+    
+    def callsign
+        id_key[13..-1]
     end
 end
 
