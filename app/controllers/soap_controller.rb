@@ -415,11 +415,11 @@ class SoapController < ApplicationController
         rig_array_out = []
         
         rig_array_in.each do |rig_info|
-            rig = Rig.where(letter: rig_info[:networkLetter]).where(rig_number: rig_info[:rigNumber]).first_or_initialize
+            rig = Rig.where(network_letter: rig_info[:networkLetter]).where(rig_number: rig_info[:rigNumber]).first_or_initialize
             
-            rig.station = rig_info[:station]
-            rig.label = rig_info[:label]
-            rig.mode = rig_info[:mode]
+            rig.username = rig_info[:station]
+            rig.network_display_name = rig_info[:label]
+            rig.mode_key = rig_info[:mode]
             rig.transmit_frequency = rig_info[:xmitFreq]
             rig.receive_frequency = rig_info[:recvFreq]
             

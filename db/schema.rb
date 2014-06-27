@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140618042628) do
+ActiveRecord::Schema.define(version: 20140627043006) do
 
   create_table "qsos", force: true do |t|
     t.integer  "time_upper"
@@ -36,15 +36,15 @@ ActiveRecord::Schema.define(version: 20140618042628) do
   end
 
   create_table "rigs", force: true do |t|
-    t.string   "station"
-    t.integer  "letter"
+    t.string   "username"
+    t.integer  "network_letter"
     t.integer  "rig_number"
-    t.string   "label"
-    t.integer  "mode"
-    t.decimal  "transmit_frequency", precision: 22, scale: 12
-    t.decimal  "receive_frequency",  precision: 22, scale: 12
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.string   "network_display_name"
+    t.integer  "mode_key"
+    t.decimal  "transmit_frequency",   precision: 22, scale: 12
+    t.decimal  "receive_frequency",    precision: 22, scale: 12
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
 end
