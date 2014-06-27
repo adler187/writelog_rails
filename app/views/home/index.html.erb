@@ -1,0 +1,57 @@
+<script>
+(function(){
+  function handleResize()
+  {
+    var height = self.innerHeight - $('#logtable').offset().top - 20;
+    $('#logtable').height(height + 'px');
+  }
+  
+  $(window).bind('resize', handleResize);
+  
+  lastid = 0;
+  
+  $(document).ready(function() {
+    handleResize();
+    
+    window.setInterval(function() {
+      $.ajax({
+        dataType: 'script',
+        type: 'GET',
+        url: '/',
+        data: { lastid: lastid },
+        complete: function() {
+        }
+      });
+    }, 2000);
+  });
+})();
+</script>
+<section>
+    <div id='map'><img src="fielddaymap.png"/></div>
+</section>
+<section class='container'>
+    <div id='logs'>
+        <h3>Logs</h3>
+        <table id='logtable'>
+            <thead><tr>
+                <th id='log_time_col'>Time</th>
+                <th id='log_station_col'>Station</th>
+                <th id='log_band_col'>Band</th>
+                <th id='log_mode_col'>Mode</th>
+                <th id='log_callsign_col'>Callsign</th>
+                <th id='log_section_col'>Section</th>
+            </tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id='freqs'>
+    <h3>Frequencies</h3>
+    <table id='rigtable'>
+        <thead><tr>
+            <th id='rig_station_col'>Station</th>
+            <th id='rig_freq_col'>Transmit Frequency</th>
+            <th id='rig_mode_col'>Mode</th>
+        </tr></thead>
+        <tbody></tbody>
+    </div>
+</section>

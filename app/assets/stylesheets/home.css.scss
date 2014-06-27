@@ -1,0 +1,94 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/*body {
+    display: flex;
+    flex-direction:
+}*/
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+#logs {
+    -webkit-flex: 2;
+    flex: 2;
+}
+
+#logtable {
+    overflow-y: scroll;
+    border: 1px solid black;
+}
+
+#freqs {
+    min-width: 35em;
+    min-height: 5em;
+    -webkit-flex: none;
+    flex: none;
+}
+
+table {
+    table-layout: fixed;
+    margin: 0 auto;
+}
+
+td {
+    text-align: center;
+}
+
+#map {
+    display: none;
+}
+
+#log_time_col {
+    width: 10em;
+}
+
+#log_station_col {
+    width: 7em;
+}
+
+#log_band_col {
+    width: 7em;
+}
+
+#log_mode_col {
+    width: 7em;
+}
+
+#log_callsign_col {
+    width: 10em;
+}
+
+#log_section_col {
+    width: 5em;
+}
+
+
+#rig_station_col {
+    width: 7em;
+}
+
+#rig_label_col {
+    width: 7em;
+}
+
+#rig_freq_col {
+    width: 7em;
+}
+
+#rig_mode_col {
+    width: 10em;
+}
+
+h3 {
+    text-align: center;
+}

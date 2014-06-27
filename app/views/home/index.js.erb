@@ -1,0 +1,20 @@
+var qsoinfo;
+var table = $('#logtable > tbody');
+<% @qsos.reverse_each do |qso| %>
+
+qsoinfo = '<tr><td><%= qso.time %></td><td><%= qso.callsign %></td><td><%= qso.band %></td><td><%= qso.mode %></td><td><%= qso.station %></td><td><%= qso.section %></td></tr>';
+table.prepend(qsoinfo).slideDown("fast");
+
+<% end %>
+
+lastid = <%= @lastid %>;
+
+var riginfo = '';
+
+<% @rigs.each do |rig| %>
+
+riginfo += '<tr><td><%= rig.station %></td><td><%= rig.transmit_frequency %></td><td><%= rig.mode %></td></tr>'
+
+<% end %>
+
+$('#rigtable > tbody').html(riginfo);
