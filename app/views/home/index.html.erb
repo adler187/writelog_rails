@@ -1,10 +1,26 @@
 <script>
+row_queue = [];
+  
 (function(){
   function handleResize()
   {
-    var height = self.innerHeight - $('#logtable').offset().top - 20;
-    $('#logtable').height(height + 'px');
+//     var height = self.innerHeight - $('#logtable').offset().top - 20;
+//     $('#logtable').height(height + 'px');
   }
+  
+  
+  
+  function update_page() {
+    $.ajax({
+      dataType: 'script',
+      type: 'GET',
+      url: '/',
+      data: { lastid: lastid },
+      complete: function() {
+      }
+    });
+  };
+    
   
   $(window).bind('resize', handleResize);
   
@@ -13,16 +29,38 @@
   $(document).ready(function() {
     handleResize();
     
-    window.setInterval(function() {
-      $.ajax({
-        dataType: 'script',
-        type: 'GET',
-        url: '/',
-        data: { lastid: lastid },
-        complete: function() {
+    update_page();
+    
+    window.setInterval(update_page, 5000);
+    
+    window.setInterval(function () {
+      var row = row_queue.shift();
+      if(!row) return;
+      
+      $(row)
+      .prependTo($('#logtable > tbody'))
+      .find('td')
+      .wrapInner('<div style="display: none;" />')
+      .parent()
+      .find('td > div')
+      .slideDown({
+        duration: 700,
+        queue: true,
+        complete: function(){
+          var $set = $(this);
+          $set.replaceWith($set.contents());
+          
+          var rows = $("#logtable").find('tr');
+          if(rows.size() > (50+1)) {
+            rows.slice(-1).fadeOut({
+              complete: function() {
+                $(this).remove();
+              }
+            });
+          }
         }
       });
-    }, 2000);
+    }, 1000);
   });
 })();
 </script>
@@ -40,18 +78,34 @@
                 <th id='log_mode_col'>Mode</th>
                 <th id='log_callsign_col'>Callsign</th>
                 <th id='log_section_col'>Section</th>
+                <th id='log_points_col'>Points</th>
+            </tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id='score'>
+        <h3>Score</h3>
+        <table id='scoretable'>
+            <thead><tr>
+                <th id='score_band_col'>Band</th>
+                <th id='score_ssb_col'>SSB</th>
+                <th id='score_cw_col'>CW</th>
+                <th id='score_dig_col'>Digital</th>
+                <th id='score_total_col'>Total</th>
+                <th id='score_points_col'>Points</th>
             </tr></thead>
             <tbody></tbody>
         </table>
     </div>
     <div id='freqs'>
-    <h3>Frequencies</h3>
-    <table id='rigtable'>
-        <thead><tr>
-            <th id='rig_station_col'>Station</th>
-            <th id='rig_freq_col'>Transmit Frequency</th>
-            <th id='rig_mode_col'>Mode</th>
-        </tr></thead>
-        <tbody></tbody>
+        <h3>Frequencies</h3>
+        <table id='rigtable'>
+            <thead><tr>
+                <th id='rig_station_col'>Station</th>
+                <th id='rig_freq_col'>Transmit Frequency</th>
+                <th id='rig_mode_col'>Mode</th>
+            </tr></thead>
+            <tbody></tbody>
+        </table>
     </div>
 </section>
