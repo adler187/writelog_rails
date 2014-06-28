@@ -1,27 +1,20 @@
 var riginfo = '';
 var scoreinfo = '';
 
-<% @qsos.reverse_each do |qso| %>
+<% @qsos.each do |qso| %>
 row_queue.push('<tr><td><%= qso.time %></td><td><%= qso.network_display_name %></td><td><%= qso.band %></td><td><%= qso.mode %></td><td><%= qso.station %></td><td><%= qso.section %></td><td><%= qso.points %></td></tr>');
 <% end %>
 
 lastid = <%= @lastid %>;
 
-
-
 <% @rigs.each do |rig| %>
-
 riginfo += '<tr><td><%= rig.network_display_name %></td><td><%= rig.transmit_frequency %></td><td><%= rig.mode %></td></tr>';
-
 <% end %>
-
-
 
 <% @scores.each do |score| %>
-
 scoreinfo += '<tr><td><%= score[:name ]%></td><td><%= score[:ssb] %></td><td><%= score[:cw] %></td><td><%= score[:dig] %></td><td><%= score[:qsos] %></td><td><%= score[:points] %></td></tr>';
-
 <% end %>
+scoreinfo += '<tr><td colspan=4>Total:</td><td><%= @total_qsos %></td><td><%= @total_points %></td></tr>';
 
 $('#rigtable > tbody').html(riginfo);
 $('#scoretable > tbody').html(scoreinfo);

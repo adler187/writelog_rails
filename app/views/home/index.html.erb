@@ -8,8 +8,6 @@ row_queue = [];
 //     $('#logtable').height(height + 'px');
   }
   
-  
-  
   function update_page() {
     $.ajax({
       dataType: 'script',
@@ -24,15 +22,12 @@ row_queue = [];
   
   $(window).bind('resize', handleResize);
   
-  lastid = 0;
+  lastid = <%= @lastid %>;
   
   $(document).ready(function() {
     handleResize();
-    
-    update_page();
-    
+
     window.setInterval(update_page, 5000);
-    
     window.setInterval(function () {
       var row = row_queue.shift();
       if(!row) return;
@@ -80,7 +75,19 @@ row_queue = [];
                 <th id='log_section_col'>Section</th>
                 <th id='log_points_col'>Points</th>
             </tr></thead>
-            <tbody></tbody>
+            <tbody>
+            <% @qsos.reverse_each do |qso| %>
+              <tr>
+                <td><%= qso.time %></td>
+                <td><%= qso.network_display_name %></td>
+                <td><%= qso.band %></td>
+                <td><%= qso.mode %></td>
+                <td><%= qso.station %></td>
+                <td><%= qso.section %></td>
+                <td><%= qso.points %></td>
+              </tr>
+            <% end %>
+            </tbody>
         </table>
     </div>
     <div id='score'>
@@ -94,7 +101,19 @@ row_queue = [];
                 <th id='score_total_col'>Total</th>
                 <th id='score_points_col'>Points</th>
             </tr></thead>
-            <tbody></tbody>
+            <tbody>
+              <% @scores.each do |score| %>
+              <tr>
+                <td><%= score[:name ]%></td>
+                <td><%= score[:ssb] %></td>
+                <td><%= score[:cw] %></td>
+                <td><%= score[:dig] %></td>
+                <td><%= score[:qsos] %></td>
+                <td><%= score[:points] %></td>
+              </tr>
+              <% end %>
+              <tr><td colspan=4>Total:</td><td><%= @total_qsos %></td><td><%= @total_points %></td></tr>
+            </tbody>
         </table>
     </div>
     <div id='freqs'>
@@ -105,7 +124,15 @@ row_queue = [];
                 <th id='rig_freq_col'>Transmit Frequency</th>
                 <th id='rig_mode_col'>Mode</th>
             </tr></thead>
-            <tbody></tbody>
+            <tbody>
+              <% @rigs.each do |rig| %>
+                <tr>
+                  <td><%= rig.network_display_name %></td>
+                  <td><%= rig.transmit_frequency %></td>
+                  <td><%= rig.mode %></td>
+                </tr>
+              <% end %>
+            </tbody>
         </table>
     </div>
 </section>
