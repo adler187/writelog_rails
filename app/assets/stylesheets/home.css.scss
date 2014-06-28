@@ -1,0 +1,119 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+table {
+    table-layout: fixed;
+    margin: 0 auto;
+}
+
+td {
+    text-align: center;
+}
+
+table {
+    vertical-align: top;
+}
+
+h3 {
+    text-align: center;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+#logs {
+    -webkit-flex: 2;
+    flex: 2;
+}
+
+#score {
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+#freqs {
+    min-width: 35em;
+    min-height: 5em;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+#logtable {
+    overflow: hidden;
+    margin: 0em 3em 0em 3em;
+}
+
+#map {
+    display: none;
+}
+
+#log_time_col {
+    min-width: 11em;
+}
+
+#log_station_col {
+    min-width: 7em;
+}
+
+#log_band_col {
+    min-width: 4em;
+}
+
+#log_mode_col {
+    min-width: 3em;
+}
+
+#log_callsign_col {
+    min-width: 4em;
+}
+
+#log_section_col {
+    min-width: 5em;
+}
+
+                
+#band_band_col {
+    min-width: 7em;
+}
+
+#band_ssb_col {
+    min-width: 7em;
+}
+
+#band_cw_col {
+    min-width: 7em;
+}
+
+#band_dig_col {
+    min-width: 10em;
+}
+
+#band_total_col {
+    min-width: 10em;
+}
+
+#band_points_col {
+    min-width: 10em;
+}
+
+#rig_station_col {
+    min-width: 7em;
+}
+
+#rig_freq_col {
+    min-width: 7em;
+}
+
+#rig_mode_col {
+    min-width: 3em;
+}

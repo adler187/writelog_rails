@@ -1,0 +1,138 @@
+<script>
+row_queue = [];
+  
+(function(){
+  function handleResize()
+  {
+//     var height = self.innerHeight - $('#logtable').offset().top - 20;
+//     $('#logtable').height(height + 'px');
+  }
+  
+  function update_page() {
+    $.ajax({
+      dataType: 'script',
+      type: 'GET',
+      url: '/',
+      data: { lastid: lastid },
+      complete: function() {
+      }
+    });
+  };
+    
+  
+  $(window).bind('resize', handleResize);
+  
+  lastid = <%= @lastid %>;
+  
+  $(document).ready(function() {
+    handleResize();
+
+    window.setInterval(update_page, 5000);
+    window.setInterval(function () {
+      var row = row_queue.shift();
+      if(!row) return;
+      
+      $(row)
+      .prependTo($('#logtable > tbody'))
+      .find('td')
+      .wrapInner('<div style="display: none;" />')
+      .parent()
+      .find('td > div')
+      .slideDown({
+        duration: 700,
+        queue: true,
+        complete: function(){
+          var $set = $(this);
+          $set.replaceWith($set.contents());
+          
+          var rows = $("#logtable").find('tr');
+          if(rows.size() > (50+1)) {
+            rows.slice(-1).fadeOut({
+              complete: function() {
+                $(this).remove();
+              }
+            });
+          }
+        }
+      });
+    }, 1000);
+  });
+})();
+</script>
+<section>
+    <div id='map'><img src="fielddaymap.png"/></div>
+</section>
+<section class='container'>
+    <div id='logs'>
+        <h3>Logs</h3>
+        <table id='logtable'>
+            <thead><tr>
+                <th id='log_time_col'>Time</th>
+                <th id='log_station_col'>Station</th>
+                <th id='log_band_col'>Band</th>
+                <th id='log_mode_col'>Mode</th>
+                <th id='log_callsign_col'>Callsign</th>
+                <th id='log_section_col'>Section</th>
+                <th id='log_points_col'>Points</th>
+            </tr></thead>
+            <tbody>
+            <% @qsos.reverse_each do |qso| %>
+              <tr>
+                <td><%= qso.time %></td>
+                <td><%= qso.network_display_name %></td>
+                <td><%= qso.band %></td>
+                <td><%= qso.mode %></td>
+                <td><%= qso.station %></td>
+                <td><%= qso.section %></td>
+                <td><%= qso.points %></td>
+              </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div id='score'>
+        <h3>Score</h3>
+        <table id='scoretable'>
+            <thead><tr>
+                <th id='score_band_col'>Band</th>
+                <th id='score_ssb_col'>SSB</th>
+                <th id='score_cw_col'>CW</th>
+                <th id='score_dig_col'>Digital</th>
+                <th id='score_total_col'>Total</th>
+                <th id='score_points_col'>Points</th>
+            </tr></thead>
+            <tbody>
+              <% @scores.each do |score| %>
+              <tr>
+                <td><%= score[:name ]%></td>
+                <td><%= score[:ssb] %></td>
+                <td><%= score[:cw] %></td>
+                <td><%= score[:dig] %></td>
+                <td><%= score[:qsos] %></td>
+                <td><%= score[:points] %></td>
+              </tr>
+              <% end %>
+              <tr><td colspan=4>Total:</td><td><%= @total_qsos %></td><td><%= @total_points %></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div id='freqs'>
+        <h3>Frequencies</h3>
+        <table id='rigtable'>
+            <thead><tr>
+                <th id='rig_station_col'>Station</th>
+                <th id='rig_freq_col'>Transmit Frequency</th>
+                <th id='rig_mode_col'>Mode</th>
+            </tr></thead>
+            <tbody>
+              <% @rigs.each do |rig| %>
+                <tr>
+                  <td><%= rig.network_display_name %></td>
+                  <td><%= rig.transmit_frequency %></td>
+                  <td><%= rig.mode %></td>
+                </tr>
+              <% end %>
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -2,10 +2,10 @@
 
 <table>
   <tr>
-    <th>Station</th>
-    <th>Letter</th>
-    <th>Rig number</th>
-    <th>Label</th>
+    <th>Username</th>
+    <th>Network Letter</th>
+    <th>Rig Number</th>
+    <th>Network Display Name</th>
     <th>Transmit frequency</th>
     <th>Receive frequency</th>
     <th>Mode</th>
@@ -16,10 +16,10 @@
 
 <% @rigs.each do |rig| %>
   <tr>
-    <td><%= rig.station %></td>
-    <td><%= rig.letter %></td>
+    <td><%= rig.username %></td>
+    <td><%= rig.network_letter %></td>
     <td><%= rig.rig_number %></td>
-    <td><%= rig.label %></td>
+    <td><%= rig.network_display_name %></td>
     <td><%= rig.transmit_frequency %></td>
     <td><%= rig.receive_frequency %></td>
     <td><%= rig.mode %></td>
